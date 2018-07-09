@@ -137,7 +137,8 @@ public class OMOICMobileSecurityConfiguration extends OMOAuthMobileSecurityConfi
 
     private void populateDetails(JSONObject json) throws JSONException, OMMobileSecurityException, MalformedURLException {
         OMLog.debug(TAG, "populateDetails");
-        JSONObject openIDConfigJSON = json.optJSONObject(OPEN_ID_CONFIGURATION);
+        //JSONObject openIDConfigJSON = json.optJSONObject(OPEN_ID_CONFIGURATION);
+        JSONObject openIDConfigJSON = json;
         if (openIDConfigJSON != null) {
             mIssuer = openIDConfigJSON.getString(ISSUER);
             mOAuthAuthorizationEndpoint = new URL(openIDConfigJSON.getString(AUTHORIZATION_ENDPOINT));
