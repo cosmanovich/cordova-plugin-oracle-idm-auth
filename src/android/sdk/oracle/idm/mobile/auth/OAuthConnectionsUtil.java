@@ -67,6 +67,7 @@ public class OAuthConnectionsUtil {
     static final String OAUTH_CLIENT_ID_REQ = "client_id=";
     static final String OAUTH_GRANT_TYPE_REQ = "grant_type=";
     static final String OAUTH_REDIRECT_URI_REQ = "redirect_uri=";
+    static final String OAUTH_LOGIN_HINT = "login_hint=";
     static final String OAUTH_RESPONSE_TYPE_REQ = "response_type=";
     static final String DEFAULT_SCOPE_BY_SDK = "idmmobileSDKDefaultScope";
 
