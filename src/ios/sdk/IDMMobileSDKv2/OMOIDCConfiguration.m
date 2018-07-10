@@ -75,7 +75,7 @@
 
 -(void)parseConfigData:(NSDictionary *)json
 {
-    NSDictionary *config = [json valueForKey:@"openid-configuration"];
+    NSDictionary *config = json;
     self.issuer = [config valueForKey:OM_PROP_ISSUER];
     self.userInfoEndpoint = [NSURL URLWithString:[config valueForKey:OM_PROP_USERINFO_ENDPOINT]];
     self.revocationEndpoint = [NSURL URLWithString:[config valueForKey:OM_PROP_USERINFO_ENDPOINT]];
