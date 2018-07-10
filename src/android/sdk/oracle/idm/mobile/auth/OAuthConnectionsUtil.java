@@ -405,7 +405,10 @@ public class OAuthConnectionsUtil {
             if (oAuthConfig instanceof OMOICMobileSecurityConfiguration) {
                 OMLog.debug(TAG, "Open ID Use case, add nonce!");
                 request.append(OPENID_NONCE_REQ + openIDNonce);
-            }
+            }           
+            
+            request.append(AMPERSAND);
+            request.append(OAUTH_LOGIN_HINT + getURLEncodedString(oAuthConfig.getLoginHint()));
 
             //for now lets add the PKCE for openID use cases
             if (mUsePKCE) {
