@@ -95,7 +95,13 @@
                                        @"&redirect_uri=%@",
                                        redirectURI.absoluteString];
         [url appendString:redirectURIString];
-    }
+    }    
+    
+    NSString *loginHintString = [NSString stringWithFormat:
+                                   @"&login_hint=%@",
+                                   config.loginHint];
+    [url appendString:loginHintString];
+    
     NSString *urlString = [url
                            stringByAddingPercentEncodingWithAllowedCharacters:
                            NSCharacterSet.URLQueryAllowedCharacterSet];
