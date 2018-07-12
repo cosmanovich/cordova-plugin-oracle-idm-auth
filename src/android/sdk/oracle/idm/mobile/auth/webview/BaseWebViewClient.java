@@ -200,7 +200,7 @@ public class BaseWebViewClient extends WebViewClient {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    /*@TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onUnhandledInputEvent(WebView view, InputEvent event) {
         OMLog.trace(TAG, "onUnhandledInputEvent");
@@ -209,7 +209,7 @@ public class BaseWebViewClient extends WebViewClient {
         } else {
             super.onUnhandledInputEvent(view, event);
         }
-    }
+    }*/
 
     @Override
     public void onScaleChanged(WebView view, float oldScale, float newScale) {
