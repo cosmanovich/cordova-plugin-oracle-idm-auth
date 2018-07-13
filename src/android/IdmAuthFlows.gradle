@@ -13,12 +13,3 @@ ext.postBuildExtras = {
         }
     }
 }
-
-android {
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'src/main/lib-proguard-rules.pro'
-        }
-    }
-}
