@@ -1,4 +1,4 @@
-ext.postBuildExtras = {
+ext.cdvPluginPostBuildExtras = {
     android {
         compileSdkVersion 26
         compileOptions {
