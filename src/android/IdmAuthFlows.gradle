@@ -8,8 +8,6 @@ ext.cdvPluginPostBuildExtras = {
         defaultConfig {
             minSdkVersion 19
             targetSdkVersion 26
-            versionCode 2312104
-            versionName "1.0.4"
         }
     }
 }
