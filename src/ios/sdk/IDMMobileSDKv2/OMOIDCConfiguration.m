@@ -93,6 +93,9 @@
 -(void)parseConfigData:(NSDictionary *)json
 {
     NSDictionary *config = [json valueForKey:OM_PROP_OPENID_CONFIGURATION];
+	if(!config)	
+		*config = json;
+
     if (config)
     {
         self.issuer = [config valueForKey:OM_PROP_ISSUER];
