@@ -94,7 +94,7 @@
 {
     NSDictionary *config = [json valueForKey:OM_PROP_OPENID_CONFIGURATION];
 	if(!config)	
-		*config = json;
+		config = json;
 
     if (config)
     {
