@@ -430,7 +430,8 @@ public class IdmAuthentication implements OMMobileSecurityServiceCallback, OMAut
         break;
       case UNTRUSTED_SERVER_CERTIFICATE:
         _finishWebView();
-        IdmAuthenticationPlugin.invokeCallbackError(_loginCallback, PluginErrorCodes.UNTRUSTED_CHALLENGE);
+        //IdmAuthenticationPlugin.invokeCallbackError(_loginCallback, PluginErrorCodes.UNTRUSTED_CHALLENGE);
+        _ommss.getCallback().onSetupCompleted(null, null, new OMMobileSecurityException(OMErrorCode.SERVER_CERTIFICATE_NOT_ALLOWED));
         break;
       default:
         Log.w(TAG, "Unhandled challenge type encountered: " + _challengeType);
