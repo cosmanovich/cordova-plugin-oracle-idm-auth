@@ -105,9 +105,9 @@ public class IdmAuthenticationPlugin extends CordovaPlugin
       _localAuth.authenticatePin(args, callbackContext);
       return true;
     }
-    else if ("authenticateFingerPrint".equals(action))
+    else if ("authenticateBiometric".equals(action))
     {
-      _localAuth.authenticateFingerPrint(args, callbackContext);
+      _localAuth.authenticateBiometric(args, callbackContext);
       return true;
     }
     else if ("enableLocalAuth".equals(action))
@@ -172,6 +172,16 @@ public class IdmAuthenticationPlugin extends CordovaPlugin
    * @param errorCode
    */
   public static void invokeCallbackError(CallbackContext context, String errorCode) {
+    if (errorCode == null || errorCode.isEmpty()) {
+      OMLog.warn(TAG, "Error code to be sent to callback was null or empty. Returning internal error code.");
+      errorCode = PluginErrorCodes.INTERNAL_ERROR;
+    }
+
+    if (context == null) {
+      OMLog.error(TAG, String.format("Cannot send error code '%s'. Callback context is null.", errorCode));
+      return;
+    }
+
     context.error(new JSONObject(errorToMap(errorCode)));
   }
 

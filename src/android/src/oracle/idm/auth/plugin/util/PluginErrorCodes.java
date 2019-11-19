@@ -1,5 +1,7 @@
 package oracle.idm.auth.plugin.util;
 
+import oracle.idm.mobile.OMErrorCode;
+
 public interface PluginErrorCodes {
   String INVALID_REDIRECT_CHALLENGE = "P1001";
   String UNTRUSTED_CHALLENGE = "P1002";
@@ -14,19 +16,20 @@ public interface PluginErrorCodes {
   String UNUSED_AND_DEPRECATED_ERR_CODE = "P1011";
   String EXTERNAL_BROWSER_LAUNCH_FAILED = "P1012";
   String SETUP_ERROR = "10015"; // Reuse existing code from IDM SDK
-  String AUTHENTICATION_FAILED = "10408"; // Reuse existing code from IDM SDK
-  String AUTHENTICATION_CANCELLED = "10029"; // Reuse existing code from IDM SDK
+  String AUTHENTICATION_FAILED = OMErrorCode.AUTHENTICATION_FAILED.getErrorCode(); // Reuse existing code from IDM SDK
+  String AUTHENTICATION_CANCELLED = OMErrorCode.USER_CANCELED_AUTHENTICATION.getErrorCode(); // Reuse existing code from IDM SDK
   String INCORRECT_CURRENT_AUTHDATA = "70009"; // Reuse code from iOS SDK
+  String INTERNAL_ERROR = OMErrorCode.INTERNAL_ERROR.getErrorCode(); // Reuse code from iOS SDK
 
   // Local auth related
   String LOCAL_AUTHENTICATOR_NOT_FOUND = "70001";
   String NO_LOCAL_AUTHENTICATORS_ENABLED = "P1013";
   String UNKNOWN_LOCAL_AUTH_TYPE = "P1014";
   String ONGOING_TASK = "P1015";
-  String ENABLE_FINGERPRINT_PIN_NOT_ENABLED = "P1016";
-  String DISABLE_PIN_FINGERPRINT_ENABLED = "P1017";
+  String ENABLE_BIOMETRIC_PIN_NOT_ENABLED = "P1016";
+  String DISABLE_PIN_BIOMETRIC_ENABLED = "P1017";
   String ERROR_ENABLING_AUTHENTICATOR = "P1018";
-  String FINGERPRINT_NOT_ENABLED = "P1019";
+  String BIOMETRIC_NOT_ENABLED = "P1019";
   String CHANGE_PIN_WHEN_PIN_NOT_ENABLED = "P1020";
   String GET_ENABLED_AUTHS_ERROR = "P1021";
 }

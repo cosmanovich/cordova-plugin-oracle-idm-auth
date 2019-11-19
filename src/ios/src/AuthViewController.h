@@ -16,6 +16,26 @@
 @interface AuthViewController : UIViewController
 
 /**
+ * Reference to the toolbar.
+ */
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+
+/**
+ * Reference to the back button.
+ */
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
+
+/**
+ * Reference to the forward button.
+ */
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *forwardButton;
+
+/**
+ * Reference to the refresh button.
+ */
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *refreshButton;
+
+/**
  * Reference to the cancel button.
  */
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelButton;
@@ -48,5 +68,10 @@
  * Used to indicate if the challenge which spawned the auth view is a login challenge or not.
  */
 - (void) setIsLoginChallenge:(BOOL) isLoginChallenge;
+
+/**
+ * Used to store set of buttons to be displayed.
+ */
+- (void) setAvailableWebButtonList: (NSMutableArray*) availableButtons;
 @end
 
