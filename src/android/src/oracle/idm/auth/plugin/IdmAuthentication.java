@@ -157,6 +157,14 @@ public class IdmAuthentication implements OMMobileSecurityServiceCallback, OMAut
         if (value == JSONObject.NULL)
           value = null;
 
+        if(key.equals(OMSecurityConstants.Challenge.PASSWORD_KEY_2))
+        {
+          String passwordAsString = (String) challengeFieldsJson.opt(OMSecurityConstants.Challenge.PASSWORD_KEY);
+          if(passwordAsString != null) {
+            char[] passwordAsCharArray = passwordAsString.toCharArray();
+            value = passwordAsCharArray;
+          }
+        }
         challengeFields.put(key, value);
       }
       _completionHandler.proceed(challengeFields);
@@ -757,6 +765,7 @@ public class IdmAuthentication implements OMMobileSecurityServiceCallback, OMAut
     List<OMToken> tokens = context.getTokens(scopes);
     if (tokens.size() > 0)
     {
+      addExpiryTimeHeader(headers, tokens.get(0).getExpiryTime());
       addAuthorizationHeader(headers, _BEARER, tokens.get(0).getValue());
     }
     return headers;
@@ -806,6 +815,15 @@ public class IdmAuthentication implements OMMobileSecurityServiceCallback, OMAut
     headers.put(_AUTHORIZATION, String.format(_TOKEN_FORMAT, tokenType, token));
   }
 
+  /**
+   * Adds expiry time header to the map.
+   * @param headers
+   * @param expiryTime
+   */
+  private void addExpiryTimeHeader(Map<String, Object> headers, Date expiryTime)
+  {
+    headers.put(_EXPIRY_TIME, expiryTime);
+  }
 
   /**
    * @return true When OM_PROP_PARSE_TOKEN_RELAY_RESPONSE set to true, false otherwise.
@@ -844,6 +862,7 @@ public class IdmAuthentication implements OMMobileSecurityServiceCallback, OMAut
   private static final String _TOKEN_FORMAT = "%s %s";
   private static final String _BEARER = "Bearer";
   private static final String _BASIC = "Basic";
+  private static final String _EXPIRY_TIME = "ExpiryTime";
   private static final String _CHALLENGE_ERROR = "error";
   private static final String _REFRESH_EXPIRED_TOKENS = "refreshExpiredTokens";
   private static final String _IS_AUTHENTICATED_KEY = "isAuthenticated";

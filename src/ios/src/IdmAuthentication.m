@@ -561,10 +561,8 @@ completedSetupWithConfiguration:(OMMobileSecurityConfiguration *)configuration
     [self.authViewController setIsLoginChallenge:isLogin];
     [self.baseViewController presentViewController:self.authViewController animated:YES completion:^{
       NSObject* webView __unused = nil;
-      if (self.isWkWebViewEnabled && [OMMobileSecurityConfiguration isWKWebViewAvailable]) {
+      if ([OMMobileSecurityConfiguration isWKWebViewAvailable]) {
         webView = self.authViewController.wkWebView;
-      } else {
-        webView = self.authViewController.authWebView;
       }
 
       if (webView == nil) {
@@ -696,10 +694,14 @@ completedSetupWithConfiguration:(OMMobileSecurityConfiguration *)configuration
   }
   NSArray* tokens = [context tokensForScopes:scopes];
   NSString* tokenValue;
+  NSDate* sessionExpiryDate;
 
   if ([tokens count] > 0) {
     tokenValue = ((OMToken*) [tokens objectAtIndex:0]).tokenValue;
+    sessionExpiryDate = ((OMToken*) [tokens objectAtIndex:0]).sessionExpiryDate;
+
     headers[@"Authorization"] = [NSString stringWithFormat:@"Bearer %@", tokenValue];
+    headers[@"ExpiryTime"] = [NSString stringWithFormat:@"%@", sessionExpiryDate];
   }
 
   return headers;
