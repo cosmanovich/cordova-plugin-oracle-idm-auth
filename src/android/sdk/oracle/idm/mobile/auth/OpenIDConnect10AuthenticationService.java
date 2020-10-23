@@ -152,6 +152,60 @@ public class OpenIDConnect10AuthenticationService extends OAuthAuthorizationCode
         return null;
     }
 
+    @Override
+    protected void updateOpenIdToken(OMAuthenticationContext authContext, OAuthToken accessToken) throws OMMobileSecurityException {
+        boolean error = false;
+        OMMobileSecurityException mobileException = null;
+        try {
+            String idTokenString = accessToken.getIdToken();
+            if (!TextUtils.isEmpty(idTokenString)) {
+                OpenIDToken idToken = getOpenIDTokenService().generate(idTokenString, true);
+                URL url = idConfig.getSigningCertEndpoint();
+                OMLog.debug(TAG, "Getting Signing Cert details from URL: " + url);
+                String jwksResponse = "";
+                OMHTTPResponse response = getSigningCertForIDCS(url, accessToken);
+                boolean verify = false;
+                if (response != null) {
+                    int responseCode = response.getResponseCode();
+                    OMLog.debug(TAG, "Response Code: " + responseCode);
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        jwksResponse = response.getResponseStringOnSuccess();
+                        verify = true;
+                    } else {
+                        jwksResponse = response.getResponseStringOnFailure();
+                        verify = false;//no verifying required
+                    }
+                }
+
+                //lets do local validation first
+                if (isTokenValid(idToken, true)) {
+                    if (verify) {
+                        boolean verificationStatus = getOpenIDTokenService().verifySignature(idToken, jwksResponse);
+                        if (!verificationStatus) {
+                            error = true;
+                            mobileException = new OMMobileSecurityException(OMErrorCode.OPENID_TOKEN_SIGNATURE_INVALID);
+                        } else {
+                            OMLog.debug(TAG, "ID token is Verified");
+                            onOpenIDSuccess(authContext, idToken, accessToken);
+                        }
+                    } else {
+                        OMLog.debug(TAG, "Skipping the verifying of ID Token");
+                        onOpenIDSuccess(authContext, idToken, accessToken);
+                    }
+                } else {
+                    OMLog.error(TAG, "ID Token Validation failed!");
+                    error = true;
+                    mobileException = new OMMobileSecurityException(OMErrorCode.OPENID_TOKEN_INVALID);
+                }
+            } else {
+                OMLog.error(TAG, "Unable to get the ID Token from the server!");
+                error = true;
+                mobileException = new OMMobileSecurityException(OMErrorCode.OPENID_AUTHENTICATION_FAILED);
+            }
+        } catch (ParseException e) {
+            mobileException = new OMMobileSecurityException(OMErrorCode.OPENID_TOKEN_PARSING_FAILED, e);
+        }
+    }
 
     private void onOpenIDSuccess(OMAuthenticationContext authContext, OpenIDToken idToken, OAuthToken accessToken) throws OMMobileSecurityException {
         OMLog.debug(TAG, "onOpenIDSuccess");

@@ -14,6 +14,8 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -32,6 +34,7 @@ import oracle.idm.mobile.OMMobileSecurityException;
 import oracle.idm.mobile.OMMobileSecurityService;
 import oracle.idm.mobile.OMSecurityConstants;
 import oracle.idm.mobile.auth.logout.OMLogoutCompletionHandler;
+import oracle.idm.mobile.auth.openID.OpenIDToken;
 import oracle.idm.mobile.configuration.OMMobileSecurityConfiguration;
 import oracle.idm.mobile.configuration.OMOAuthMobileSecurityConfiguration;
 import oracle.idm.mobile.connection.OMHTTPRequest;
@@ -567,10 +570,24 @@ abstract class OAuthAuthenticationService extends AuthenticationService {
             if (triedRefreshing && refreshedToken != null) {
                 OMLog.debug(TAG, "Refreshed the expired access token!");
                 accessTokensWithPassedScopes.add(refreshedToken);
+                updateOpenIdToken(authContext, refreshedToken);
                 if (authContext.getAuthenticatedMode() == AuthenticationMode.OFFLINE) {
                     OMLog.debug(TAG, "Changed the authenticate mode from LOCAL to REMOTE, since the expired access token was refreshed.");
                     // MCS offline OAuth Requirement.
                     authContext.setAuthenticatedMode(AuthenticationMode.ONLINE);
+                }
+                /* Adding any auxiliary tokens generated during the auth process to
+                 the OAuth token list, e.g: OpenIDToken (instanceof OAuthToken) is present
+                 in authContext.getTokens(). */
+                for (Map.Entry<String, OMToken> tokenEntry : authContext.getTokens().entrySet()) {
+
+                    if (tokenEntry.getValue() instanceof OAuthToken) {
+                        if (!tokenEntry.getValue().isTokenExpired()) {
+                            accessTokensWithPassedScopes.add((OAuthToken) tokenEntry.getValue());
+                            OMLog.debug(TAG, "Added auxiliary token : " + tokenEntry.getKey()
+                                + " to the token list!");
+                        }
+                    }
                 }
             }
             allAccessTokens.addAll(accessTokensWithPassedScopes);
@@ -588,6 +605,10 @@ abstract class OAuthAuthenticationService extends AuthenticationService {
             OMLog.debug(TAG, "Not an openID or OAuth config returning true!");
             return true;
         }
+    }
+
+    protected void updateOpenIdToken(OMAuthenticationContext authContext, OAuthToken accessToken) throws OMMobileSecurityException {
+
     }
 
     private List<OAuthToken> getAccessTokensWithPassedScopes(List<OAuthToken> allAccessTokens,
